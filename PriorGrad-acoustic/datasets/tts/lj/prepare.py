@@ -5,6 +5,7 @@ import os
 
 os.environ["OMP_NUM_THREADS"] = "1"
 
+import sys
 import json
 import os
 import re
@@ -14,10 +15,8 @@ import pandas as pd
 from g2p_en import G2p
 from tqdm import tqdm
 
-basedir = 'data/raw/LJSpeech-1.1'
 
 g2p = G2p()
-
 
 def g2p_job(idx, fn, txt):
     spk = idx // 100
@@ -37,6 +36,10 @@ def g2p_job(idx, fn, txt):
 
 if __name__ == "__main__":
     # build mfa_input for forced alignment
+
+    basedir = 'data/raw/LJSpeech-1.1' if len(sys.argv) == 1 else sys.argv[1]
+    assert os.path.isdir(basedir)
+
     p = Pool(os.cpu_count())
     subprocess.check_call(f'rm -rf {basedir}/mfa_input', shell=True)
     futures = []
