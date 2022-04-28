@@ -51,7 +51,7 @@ def trim_long_silences(path, sr, return_raw_wav=False, norm=True):
         if np.abs(wav_raw).max() > 1.0:
             wav_raw = wav_raw / np.abs(wav_raw).max()
 
-    wav = librosa.resample(wav_raw, sr, sampling_rate, res_type='kaiser_best')
+    wav = librosa.resample(wav_raw, orig_sr=sr, target_sr=sampling_rate, res_type='kaiser_best')
 
     vad_window_length = 30  # In milliseconds
     # Number of frames to average together when performing the moving average smoothing.
@@ -163,7 +163,7 @@ def mel_spectrogram(y, n_fft, num_mels, sampling_rate, hop_size, win_size, fmin,
 
     global mel_basis, hann_window
     if fmax not in mel_basis:
-        mel = librosa_mel_fn(sampling_rate, n_fft, num_mels, fmin, fmax)
+        mel = librosa_mel_fn(sr=sampling_rate, n_fft=n_fft, n_mels=num_mels, fmin=fmin, fmax=fmax)
         mel_basis[str(fmax)+'_'+str(y.device)] = torch.from_numpy(mel).float().to(y.device)
         hann_window[str(y.device)] = torch.hann_window(win_size).to(y.device)
 

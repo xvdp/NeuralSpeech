@@ -121,7 +121,7 @@ def _mel_to_linear(mel_spectrogram, hparams):
 
 def _build_mel_basis(hparams):
     assert hparams['fmax'] <= hparams['audio_sample_rate'] // 2
-    return librosa.filters.mel(hparams['audio_sample_rate'], hparams['n_fft'], n_mels=hparams['audio_num_mel_bins'],
+    return librosa.filters.mel(sr=hparams['audio_sample_rate'],  n_fft=hparams['n_fft'], n_mels=hparams['audio_num_mel_bins'],
                                fmin=hparams['fmin'], fmax=hparams['fmax'])
 
 

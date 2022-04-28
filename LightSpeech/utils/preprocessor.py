@@ -44,7 +44,7 @@ def trim_long_silences(path, sr, return_raw_wav=False, norm=True):
         if np.abs(wav_raw).max() > 1.0:
             wav_raw = wav_raw / np.abs(wav_raw).max()
 
-    wav = librosa.resample(wav_raw, sr, sampling_rate, res_type='kaiser_best')
+    wav = librosa.resample(wav_raw, orig_sr=sr, target_sr=sampling_rate, res_type='kaiser_best')
 
     vad_window_length = 30  # In milliseconds
     # Number of frames to average together when performing the moving average smoothing.
@@ -127,7 +127,7 @@ def process_utterance(wav_path,
     # get mel basis
     fmin = 0 if fmin is -1 else fmin
     fmax = sample_rate / 2 if fmax is -1 else fmax
-    mel_basis = librosa.filters.mel(sample_rate, fft_size, num_mels, fmin, fmax)
+    mel_basis = librosa.filters.mel(sr=sample_rate, n_fft=fft_size, n_mels=num_mels, fmin=fmin, fmax=fmax)
     mel = mel_basis @ spc
 
     if vocoder == 'pwg':
